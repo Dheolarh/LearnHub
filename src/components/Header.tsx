@@ -3,6 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
 import { 
+  user,
+  ChevronDown,
+  LogOut,
   Search, 
   ShoppingCart, 
   Menu, 
@@ -23,8 +26,9 @@ const Header: React.FC<HeaderProps> = ({ mobileMenuOpen, setMobileMenuOpen }) =>
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [scrolled, setScrolled] = useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(() => 
-    document.documentElement.classList.contains('dark')
+    document.documentElement.classList.contains('dark')                                     
   );
 
   // Handle scroll effect
@@ -147,10 +151,57 @@ const Header: React.FC<HeaderProps> = ({ mobileMenuOpen, setMobileMenuOpen }) =>
               )}
             </Link>
             
+            {/* Profile dropdown Desktop - Desktop Only */}
+            {user && (
+              <div className="relative hidden md:block">
+                <button
+                  onClick={() => setProfileMenuOpen((open) => !open)}
+                  className="flex items-center rounded-full bg-gray-100 p-1.5 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+                >
+                  <img
+                    src={user.avatar || "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=1"}
+                    alt={user.name}
+                    className="h-8 w-8 rounded-full object-cover"
+                  />
+                  <ChevronDown className="ml-1 h-4 w-4" />
+                </button>
+                {profileMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 rounded-md bg-white py-2 shadow-lg ring-1 ring-black/10 dark:bg-gray-800 z-50">
+                    <Link
+                      to="/dashboard"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                      onClick={() => setProfileMenuOpen(false)}
+                    >
+                      Dashboard
+                    </Link>
+                    <Link
+                      to="/dashboard/profile"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                      onClick={() => setProfileMenuOpen(false)}
+                    >
+                      Profile
+                    </Link>
+                    <button
+                      onClick={() => {
+                        setProfileMenuOpen(false);
+                        // Call logout from useAuth
+                        logout();
+                        navigate('/');
+                      }}
+                      className="flex w-full items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Sign out
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+            
             {/* Mobile menu button */}
             <button
               type="button"
-              className="rounded-md p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+              className="rounded-md p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 md:hidden"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               <Menu className="h-6 w-6" />
