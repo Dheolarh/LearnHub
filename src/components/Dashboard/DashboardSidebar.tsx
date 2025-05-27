@@ -12,6 +12,7 @@ import {
   X 
 } from 'lucide-react';
 import Logo from '../Logo';
+import { Link } from 'react-router-dom';
 
 interface DashboardSidebarProps {
   onClose?: () => void;
@@ -34,7 +35,9 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ onClose }) => {
       <div className="flex items-center justify-between border-b border-gray-200 p-4 dark:border-gray-700">
         <div className="flex items-center">
           <Logo className="h-8 w-8 text-blue-600" />
-          <span className="ml-2 text-xl font-bold text-gray-900 dark:text-white">LearnHub</span>
+            <Link to="/" className="flex items-center">
+              <span className="ml-2 text-xl font-bold text-gray-900 dark:text-white">LearnHub</span>
+            </Link>
         </div>
         {onClose && (
           <button
